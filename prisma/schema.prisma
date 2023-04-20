@@ -9,17 +9,35 @@ datasource db {
 
 model users {
     id       Int     @id @default(autoincrement())
-    username String  @db.VarChar(55) @unique
+    username String  @unique
     password String  @db.VarChar(512)
-    email    String  @db.VarChar(55) @unique
-    name     String  @db.VarChar(55)
-    role     String? @db.VarChar(55)
+    email    String  @unique
+    name     String  
+    role     String? 
 }
 
 model products {
-    id          Int     @id @default(autoincrement())
-    name        String  @db.VarChar(55)
-    description String  @db.VarChar(512)
-    price       Float   @default(0)
-    category    Int     @default(0)
+    id                Int           @id @default(autoincrement())
+    name              String
+    description       String        @db.VarChar(512)
+    price             Float         @default(0)
+    categories        categories    @relation(fields: [category], references: [id])
+    category          Int
+    subcategories     subcategories @relation(fields: [subcategory], references: [id])
+    subcategory       Int           @default(0)
+}
+
+model categories {
+    id              Int     @id @default(autoincrement())
+    name            String
+    products        products[]
+    subcategories   subcategories[]
+}
+
+model subcategories {
+    id              Int         @id @default(autoincrement())
+    name            String
+    categories      categories  @relation(fields: [category], references: [id])
+    category        Int
+    products        products[]
 }
